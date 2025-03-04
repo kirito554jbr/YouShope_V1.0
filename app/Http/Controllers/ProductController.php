@@ -6,6 +6,7 @@ use App\Models\Categorie;
 use App\Models\Product;
 
 use Illuminate\Http\Request;
+use App\Http\Controllers\Auth;
 
 class ProductController extends Controller
 {
@@ -76,20 +77,21 @@ class ProductController extends Controller
         $product = Product::find($request['id']);
         // dd($product);
 
-        
-            $categorie = Categorie::all();
-            // dd(compact('product'));
 
-            // dd(compact('categorie'));
+        $categorie = Categorie::all();
+        // dd(compact('product'));
 
-        
+        // dd(compact('categorie'));
+
+
 
         // dd($user);
         return view('Admin.updateProduct', compact('product'), compact('categorie'));
     }
 
 
-    public function showCategory(){
+    public function showCategory()
+    {
 
         $categorie = Categorie::all();
 
@@ -124,7 +126,7 @@ class ProductController extends Controller
     //     $product = Product::find($request['id']);
 
     //     if (!$product) {
-    //         return redirect()->route('products.index')->with('error', 'Product not found!');
+    //         return redirect()->route('Client.clinetDashboard')->with('error', 'Product not found!');
     //     }
 
     //     // Add product to cart
@@ -137,4 +139,117 @@ class ProductController extends Controller
 
     //     return redirect()->route('products.index')->with('success', 'Product added to cart successfully!');
     // }
+
+
+    public function testCart()
+
+    {
+
+        $products = Product::all();
+
+        return view('Client.products', compact('products'));
+
+    }
+
+
+    public function addToCart($id)
+
+    {
+        // dd($id);
+
+        $product = Product::findOrFail($id);
+
+          
+
+        $cart = session()->get('cart', []);
+
+        
+
+        if(isset($cart[$id])) {
+
+            $cart[$id]['quantity']++;
+
+        } else {
+
+            $cart[$id] = [
+
+                "id" => $id,
+
+                "name" => $product->name,
+
+                "quantity" => 1,
+
+                "price" => $product->price,
+
+                "image" => $product->image
+
+            ];
+
+        }
+
+          
+
+        session()->put('cart', $cart);
+
+
+
+        return redirect()->back()->with('success', 'Product added to cart successfully!');
+
+    }
+
+
+    public function updateCart(Request $request)
+
+    {
+
+        if($request->id && $request->quantity){
+
+            $cart = session()->get('cart');
+
+            $cart[$request->id]["quantity"] = $request->quantity;
+
+            session()->put('cart', $cart);
+
+            session()->flash('success', 'Cart updated successfully');
+
+        }
+
+    }
+
+
+    public function cart()
+
+    {
+        // dd(auth()->id());
+        // dd(session()->get('cart'));
+
+
+        return view('Client.cart');
+
+    }
+
+
+
+
+    public function remove(Request $request)
+
+    {
+
+        if($request->id) {
+
+            $cart = session()->get('cart');
+
+            if(isset($cart[$request->id])) {
+
+                unset($cart[$request->id]);
+
+                session()->put('cart', $cart);
+
+            }
+
+            session()->flash('success', 'Product removed successfully');
+
+        }
+
+    }
 }

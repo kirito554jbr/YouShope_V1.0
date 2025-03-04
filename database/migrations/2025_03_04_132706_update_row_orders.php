@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddRoleid extends Migration
+class UpdateRowOrders extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class AddRoleid extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->foreignId('role_id')->nullable()->constrained()->nullOnDelete()->cascadeOnUpdate();
+        Schema::table('orders', function(Blueprint $table) {
+            $table->renameColumn('OrderDate', 'Prix_Total');
         });
     }
 
@@ -25,8 +25,8 @@ class AddRoleid extends Migration
      */
     public function down()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('role_id');
+        Schema::table('orders', function(Blueprint $table) {
+            $table->renameColumn('Prix_Total', 'OrderDate');
         });
     }
 }
