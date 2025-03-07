@@ -23,11 +23,11 @@
                     <i class="fas fa-tachometer-alt mr-3"></i> Dashboard
                 </a>
                 <a class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-200 hover:text-gray-900"
-                    href="/ProductsCalient">
+                    href="/Products">
                     <i class="fas fa-box-open mr-3"></i> Products
                 </a>
                 <a class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-200 hover:text-gray-900"
-                    href="clientOrders">
+                    href="/AdminOrders">
                     <i class="fas fa-shopping-cart mr-3"></i> Orders
                 </a>
                 <a class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-200 hover:text-gray-900"
@@ -85,6 +85,9 @@
                                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                             Order ID</th>
                                         <th
+                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Client</th>
+                                        <th
                                             class="px-8 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                             Date</th>
                                         <th
@@ -115,6 +118,10 @@
                                                                     #{{ $order->id }}
                                                                 </td>
                                                                 <td
+                                                                    class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                                                    {{ $order->user->name }}
+                                                                </td>
+                                                                <td
                                                                     class="px-4  py-4 whitespace-nowrap text-sm text-gray-500">
                                                                     {{ $order->created_at->format('d-m-Y') }}
                                                                 </td>
@@ -125,6 +132,44 @@
                                                                 <td
                                                                     class="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
                                                                     {{ $order->status }}
+                                                                </td>
+                                                                <td class=" whitespace-nowrap text-sm text-gray-500">
+
+
+                                                                    <form action="/updateStatus" method="GET">
+                                                                        <select name="status"
+                                                                            class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+
+
+                                                                            <option  value="Pending">
+                                                                                Pending
+                                                                            </option>
+                                                                            <option  value="Processing">
+                                                                                Processing
+                                                                            </option>
+                                                                            <option  value="Confirmed">
+                                                                                Confirmed
+                                                                            </option>
+                                                                            <option  value="Canceled">
+                                                                                Canceled
+                                                                            </option>
+
+                                                                        </select>
+                                                                        <div class="mb-4">
+
+                                                                            <input type="hidden"
+                                                                                class="w-full px-3 py-2 border rounded-lg"
+                                                                                value={{ $order->id }} name="id"
+                                                                                placeholder="Enter  capacite ">
+                                                                        </div>
+                                                                        <div class="flex justify-end">
+                                                                            <input value="Update" type="submit"
+                                                                                class="bg-gray-800 text-white px-4 py-2 rounded-lg hover:bg-gray-700">
+
+
+                                                                        </div>
+                                                                    </form>
+
                                                                 </td>
                                                                 <td
                                                                     class="px-4 py-4 whitespace-nowrap text-sm text-gray-500">

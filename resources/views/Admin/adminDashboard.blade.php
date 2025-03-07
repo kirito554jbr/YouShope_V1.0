@@ -27,7 +27,7 @@
                     <i class="fas fa-box-open mr-3"></i> Products
                 </a>
                 <a class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-200 hover:text-gray-900"
-                    href="#">
+                    href="/AdminOrders">
                     <i class="fas fa-shopping-cart mr-3"></i> Orders
                 </a>
                 <a class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-200 hover:text-gray-900"
@@ -54,7 +54,7 @@
                             class="max-w-xs bg-white flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                             id="user-menu-button" type="button">
                             <span class="sr-only">Open user menu</span>
-                            <span class="text-gray-500">aymen jebrane</span>
+                            <span class="text-gray-500">{{$userName->name}}</span>
                             <i class="fas fa-chevron-down ml-2 text-gray-500"></i>
                         </button>
                     </div>

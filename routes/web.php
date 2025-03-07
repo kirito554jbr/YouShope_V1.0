@@ -7,6 +7,8 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\ProductController;
 use App\Models\Categorie;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\OrdersController;
+use App\Http\Controllers\StripeController;
 use App\Http\Controllers\UserController;
 
 /*
@@ -21,9 +23,11 @@ use App\Http\Controllers\UserController;
 */
 
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', function () { return view('welcome');});
+// Route::get('/details/{id}', function () { return view('Client.orderDetails');});
+
+// Route::get('/clientOrders', function () { return view('Client.myOrders');});
+
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -68,20 +72,25 @@ Route::get('/users/givePermission', [UserController::class, 'givePermission']);
 
 
 Route::get('/testCart', [ProductController::class, 'testCart']);
-
 Route::get('cart', [ProductController::class, 'cart'])->name('cart');
-
 Route::get('add-to-cart/{id}', [ProductController::class, 'addToCart'])->name('add.to.cart');
-
 Route::patch('update-cart', [ProductController::class, 'update'])->name('update.cart');
-
 Route::delete('remove-from-cart', [ProductController::class, 'remove'])->name('remove.from.cart');
 
 
 
 
+Route::get('/orders/create' , [OrdersController::class, 'create']);
+Route::get('/clientOrders', [OrdersController::class, 'index'])->middleware(['auth']);
+Route::get('/AdminOrders', [OrdersController::class, 'Adminindex'])->middleware(['auth']);
+Route::get('/details/{id}', [OrdersController::class, 'orderDetails']);
+Route::get('/updateStatus',[OrdersController::class, 'updateStatus']);
 
 
+ 
+Route::get('/checkout', [StripeController::class, 'checkout'])->name('checkout');
+Route::get('/session', [StripeController::class, 'session'])->name('session');
+Route::get('/success', [StripeController::class, 'success'])->name('success');
 
 
 

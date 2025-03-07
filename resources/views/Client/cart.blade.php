@@ -1,180 +1,143 @@
 @extends('Client.layout')
 
-  
+
 
 @section('content')
 
-<table id="cart" class="table table-hover table-condensed">
+    <table id="cart" class="table table-hover table-condensed">
 
-    <thead>
+        <thead>
 
-        <tr>
+            <tr>
 
-            <th style="width:50%">Product</th>
+                <th style="width:50%">Product</th>
 
-            <th style="width:10%">Price</th>
+                <th style="width:10%">Price</th>
 
-            <th style="width:8%">Quantity</th>
+                <th style="width:8%">Quantity</th>
 
-            <th style="width:22%" class="text-center">Subtotal</th>
+                <th style="width:22%" class="text-center">Subtotal</th>
 
-            <th style="width:10%"></th>
+                <th style="width:10%"></th>
 
-        </tr>
+            </tr>
 
-    </thead>
+        </thead>
 
-    <tbody>
+        <tbody>
 
-        @php $total = 0 @endphp
+            @php $total = 0 @endphp
 
-        @if(session('cart'))
+            @if (session('cart'))
+                @foreach (session('cart') as $id => $details)
+                    @php $total += $details['price'] * $details['quantity'] @endphp
 
-            @foreach(session('cart') as $id => $details)
+                    <tr data-id="{{ $id }}">
 
-                @php $total += $details['price'] * $details['quantity'] @endphp
+                        <td data-th="Product">
 
-                <tr data-id="{{ $id }}">
+                            <div class="row">
 
-                    <td data-th="Product">
+                                <div class="col-sm-3 hidden-xs"><img src="{{ $details['image'] }}" width="100"
+                                        height="100" class="img-responsive" /></div>
 
-                        <div class="row">
+                                <div class="col-sm-9">
 
-                            <div class="col-sm-3 hidden-xs"><img src="{{ $details['image'] }}" width="100" height="100" class="img-responsive"/></div>
+                                    <h4 class="nomargin">{{ $details['name'] }}</h4>
 
-                            <div class="col-sm-9">
-
-                                <h4 class="nomargin">{{ $details['name'] }}</h4>
+                                </div>
 
                             </div>
 
-                        </div>
+                        </td>
 
-                    </td>
+                        <td data-th="Price">${{ $details['price'] }}</td>
 
-                    <td data-th="Price">${{ $details['price'] }}</td>
+                        <td data-th="Quantity">
 
-                    <td data-th="Quantity">
+                            <input type="number" value="{{ $details['quantity'] }}"
+                                class="form-control quantity update-cart" />
 
-                        <input type="number" value="{{ $details['quantity'] }}" class="form-control quantity update-cart" />
+                        </td>
 
-                    </td>
+                        <td data-th="Subtotal" class="text-center">${{ $details['price'] * $details['quantity'] }}</td>
 
-                    <td data-th="Subtotal" class="text-center">${{ $details['price'] * $details['quantity'] }}</td>
+                        <td class="actions" data-th="">
 
-                    <td class="actions" data-th="">
+                            <button class="btn btn-danger btn-sm remove-from-cart"><i class="fa fa-trash-o"></i></button>
 
-                        <button class="btn btn-danger btn-sm remove-from-cart"><i class="fa fa-trash-o"></i></button>
+                        </td>
 
-                    </td>
+                    </tr>
+                @endforeach
+            @endif
 
-                </tr>
+        </tbody>
 
-            @endforeach
+        <tfoot>
 
-        @endif
+            <tr>
 
-    </tbody>
+                <td colspan="5" class="text-right">
+                    <h3><strong>Total ${{ $total }}</strong></h3>
+                </td>
 
-    <tfoot>
+            </tr>
 
-        <tr>
+            <tr>
 
-            <td colspan="5" class="text-right"><h3><strong>Total ${{ $total }}</strong></h3></td>
+                <td colspan="5" class="text-right">
 
-        </tr>
+                    <form action="/session" method="POST">
+                        <a href="{{ url('/ProductsCalient') }}" class="btn btn-primary"><i class="fa fa-angle-left">Continue Shopping</i></a>
+                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                        <input type='hidden' name="total" value={{ $total }}>
+                        @foreach (session('cart') as $id => $details)
+                        <input type='hidden' name="productname" value={{ $details['name'] }}>
+                        @endforeach
+                        <button class="btn btn-success-emphasis"> <a href="/orders/create">Checkout</a></button>
+                    </form>
+                </td>
 
-        <tr>
+            </tr>
 
-            <td colspan="5" class="text-right">
+        </tfoot>
 
-                <a href="{{ url('/ProductsCalient') }}" class="btn btn-primary"><i class="fa fa-angle-left"></i> Continue Shopping</a>
-
-                <button class="btn btn-success-emphasis">Checkout</button>
-
-            </td>
-
-        </tr>
-
-    </tfoot>
-
-</table>
+    </table>
 
 @endsection
 
-  
+
 
 @section('scripts')
+    <script type="text/javascript">
+        $(".update-cart").change(function(e) {
 
-<script type="text/javascript">
+            e.preventDefault();
 
-  
 
-    $(".update-cart").change(function (e) {
 
-        e.preventDefault();
+            var ele = $(this);
 
-  
 
-        var ele = $(this);
-
-  
-
-        $.ajax({
-
-            url: '{{ route('update.cart') }}',
-
-            method: "patch",
-
-            data: {
-
-                _token: '{{ csrf_token() }}', 
-
-                id: ele.parents("tr").attr("data-id"), 
-
-                quantity: ele.parents("tr").find(".quantity").val()
-
-            },
-
-            success: function (response) {
-
-               window.location.reload();
-
-            }
-
-        });
-
-    });
-
-  
-
-    $(".remove-from-cart").click(function (e) {
-
-        e.preventDefault();
-
-  
-
-        var ele = $(this);
-
-  
-
-        if(confirm("Are you sure want to remove?")) {
 
             $.ajax({
 
-                url: '{{ route('remove.from.cart') }}',
+                url: '{{ route('update.cart') }}',
 
-                method: "DELETE",
+                method: "patch",
 
                 data: {
 
-                    _token: '{{ csrf_token() }}', 
+                    _token: '{{ csrf_token() }}',
 
-                    id: ele.parents("tr").attr("data-id")
+                    id: ele.parents("tr").attr("data-id"),
+
+                    quantity: ele.parents("tr").find(".quantity").val()
 
                 },
 
-                success: function (response) {
+                success: function(response) {
 
                     window.location.reload();
 
@@ -182,12 +145,46 @@
 
             });
 
-        }
+        });
 
-    });
 
-  
 
-</script>
+        $(".remove-from-cart").click(function(e) {
 
+            e.preventDefault();
+
+
+
+            var ele = $(this);
+
+
+
+            if (confirm("Are you sure want to remove?")) {
+
+                $.ajax({
+
+                    url: '{{ route('remove.from.cart') }}',
+
+                    method: "DELETE",
+
+                    data: {
+
+                        _token: '{{ csrf_token() }}',
+
+                        id: ele.parents("tr").attr("data-id")
+
+                    },
+
+                    success: function(response) {
+
+                        window.location.reload();
+
+                    }
+
+                });
+
+            }
+
+        });
+    </script>
 @endsection

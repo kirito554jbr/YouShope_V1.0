@@ -52,11 +52,11 @@
                     <i class="fas fa-tachometer-alt mr-3"></i>
                     Dashboard
                 </a>
-                <a class="d-flex align-items-center py-2 px-4 bg-light text-dark" href="#">
+                <a class="d-flex align-items-center py-2 px-4 bg-light text-dark" href="/ProductsCalient">
                     <i class="fas fa-box-open mr-3"></i>
                     Products
                 </a>
-                <a class="d-flex align-items-center py-2 px-4 text-dark" href="#">
+                <a class="d-flex align-items-center py-2 px-4 text-dark" href="/clientOrders">
                     <i class="fas fa-shopping-cart mr-3"></i>
                     Orders
                 </a>
@@ -76,7 +76,7 @@
         <!-- Main content -->
         <div class="flex-1 d-flex flex-column container py-4 ">
 
-            <header class="bg-white shadow-sm mb-4">
+            <header class="bg-white shadow-sm mb-4 ">
                 <div class="d-flex justify-content-between align-items-center mx-4 py-3">
                     <h1 class="h3 font-weight-bold">Products</h1>
 

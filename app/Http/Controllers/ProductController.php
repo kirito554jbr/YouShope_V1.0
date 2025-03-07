@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Categorie;
 use App\Models\Product;
-
+use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Auth;
 
@@ -15,13 +15,14 @@ class ProductController extends Controller
         $product = Product::all();
 
         // dd(compact('product'));
+        $userName = User::find(auth()->id());
 
 
         foreach ($product as $products) {
             $categorie = Categorie::find($request['categorie_id']);
         };
         // dd($user);
-        return view('Admin.adminDashboard', compact('product'));
+        return view('Admin.adminDashboard', compact('product'), compact('userName'));
     }
 
 
@@ -120,26 +121,7 @@ class ProductController extends Controller
     }
 
 
-    // public function addToCart(Request $request)
-    // {
-    //     // $productId = $request->input('product_id');
-    //     $product = Product::find($request['id']);
-
-    //     if (!$product) {
-    //         return redirect()->route('Client.clinetDashboard')->with('error', 'Product not found!');
-    //     }
-
-    //     // Add product to cart
-    //     $cart = session()->get('cart', []);
-    //     $cart[$request['id']] = [
-    //         'name' => $product->name,
-    //         'price' => $product->price,
-    //     ];
-    //     session()->put('cart', $cart);
-
-    //     return redirect()->route('products.index')->with('success', 'Product added to cart successfully!');
-    // }
-
+   
 
     public function testCart()
 
@@ -221,7 +203,10 @@ class ProductController extends Controller
 
     {
         // dd(auth()->id());
-        // dd(session()->get('cart'));
+
+        // $test = session()->get('cart');
+        // dd($test);
+        // dd(array_values($test)[0]);
 
 
         return view('Client.cart');

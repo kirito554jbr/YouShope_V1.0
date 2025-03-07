@@ -16,5 +16,8 @@ class Orders extends Model
         'Adress'
     ];
 
+    public function user(){
+        return $this->belongsTo(User::class);
+    }
 
 }

@@ -13,8 +13,14 @@ class UpdateRowOrders extends Migration
      */
     public function up()
     {
-        Schema::table('orders', function(Blueprint $table) {
-            $table->renameColumn('OrderDate', 'Prix_Total');
+        Schema::create('ordered_items', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('product_id');
+            $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
+            $table->unsignedBigInteger('order_id');
+            $table->foreign('order_id')->references('id')->on('orders')->onDelete('cascade');
+            $table->string('quantity');
+            $table->timestamps();
         });
     }
 
@@ -25,8 +31,6 @@ class UpdateRowOrders extends Migration
      */
     public function down()
     {
-        Schema::table('orders', function(Blueprint $table) {
-            $table->renameColumn('Prix_Total', 'OrderDate');
-        });
+        Schema::dropIfExists('ordered_items');
     }
 }
